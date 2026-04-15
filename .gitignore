@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
+agentcore/.cache/
+agentcore/.cli/
+agentcore/.env.local
+agentcore/.llm-context/
+agentcore/cdk/node_modules/
+agentcore/cdk/cdk.out/
+agentcore/cdk/dist/
+agentcore/*.zip
+agentcore/StatefulMeetingDemo/

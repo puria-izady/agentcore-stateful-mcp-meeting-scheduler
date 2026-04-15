@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  python-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install fastmcp mcp pydantic boto3
+
+      - name: Compile Python files
+        run: |
+          python -m py_compile \
+            app/StatefulMeetingDemo/main.py \
+            local_runtime_test.py \
+            remote_runtime_test.py
+
+  cdk-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: agentcore/cdk/package-lock.json
+
+      - name: Install CDK dependencies
+        working-directory: agentcore/cdk
+        run: npm ci
+
+      - name: Build CDK project
+        working-directory: agentcore/cdk
+        run: npm run build
